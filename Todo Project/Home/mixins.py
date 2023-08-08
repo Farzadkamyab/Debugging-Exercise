@@ -1,23 +1,30 @@
-from django.shortcuts import render, redirect
-from .models import Todo
+from django.shortcuts import render, redirect, get_object_or_404
+from django.core.exceptions import PermissionDenied
 from .forms import TodoForm
-
+from .models import Todo
 
 class TodoMixin:
     form_class = TodoForm
     template_name = None
 
     def dispatch(self, request, *args, **kwargs):
-        todo = Todo.objects.get(id=kwargs['id'])
-        if not todo.user == request.user:
-            raise PermissionDenied
+        if request.user.is_authenticated:
+            todo = get_object_or_404(Todo, id=kwargs['pk'])
+            if not todo.user == request.user:
+                raise PermissionDenied
+            return super().dispatch(request, *args, **kwargs)
+    
+    def get(self, request, pk):
+        todo = Todo.objects.filter(id=pk)
+        form = self.form_class()
+        context = {
+            'todo': todo,
+            'form': form,
+            }
+        return render(request, self.template_name, context)
 
-    def get(self, request, id):
-        todo = Todo.objects.filter(id=id)
-        return render(request, self.template_name, {'todo': todo})
-
-    def post(self, request, id):
-        todo = Todo.objects.get(id=id)
+    def post(self, request, pk):
+        todo = Todo.objects.get(id=pk)
         form = self.form_class(request.POST, instance=todo)
         if form.is_valid():
             todo.save()
