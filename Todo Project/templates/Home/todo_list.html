@@ -2,7 +2,26 @@
 {% block title %}{% endblock %}
 
 {% block content %}
-    <div class="card">
-        {{ todos }}
-    </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">User</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Complete</th>
+            <th scope="col">Link</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in todos %}
+        <tr>
+            <td>{{ t.user }}</td>
+            <td>{{ t.title }}</td>
+            <td>{{ t.description }}</td>
+            <td>{{ t.is_completed }}</td>
+            <td><a href="{% url 'todo_detail' t %}">Detail</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
