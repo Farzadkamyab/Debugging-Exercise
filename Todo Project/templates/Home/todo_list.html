@@ -19,7 +19,7 @@
             <td>{{ t.title }}</td>
             <td>{{ t.description }}</td>
             <td>{{ t.is_completed }}</td>
-            <td><a href="#">Detail</a></td>
+            <td><a href="{% url 'todo_detail' t.id %}">Detail</a></td>
         </tr>
         {% endfor %}
     </tbody>
