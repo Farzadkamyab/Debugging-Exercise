@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View
 from .models import Todo
 from .mixins import TodoMixin
-
+from .forms import TodoForm
 
 class IndexView(View):
     def get(self, request):
@@ -16,6 +16,6 @@ class TodoListView(View):
 
 
 class TodoDetailView(TodoMixin, View):
-    template_name = 'todo_detail.html'
+    template_name = 'Home/todo_detail.html'
 
 
